@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Campaign } from './internal/core/domain/models/campaign.model';
+import { Campaign, CampaignInteractionConglomerate, CampaignPlatform } from './internal/core/domain/entities/campaign.entity';
 import { CampaignModule } from './internal/campaign.module';
+import { Platform } from './internal/core/domain/entities/platform.entity';
+import { InteractionType } from './internal/core/domain/entities/itype.entity';
 
 @Module({
   imports: [ ConfigModule.forRoot({
@@ -16,11 +18,15 @@ import { CampaignModule } from './internal/campaign.module';
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    autoLoadEntities: true,
-    synchronize: true,
+    autoLoadEntities: false,
+    synchronize: false,
     
     entities: [
       Campaign,
+      Platform,
+      CampaignPlatform,
+      CampaignInteractionConglomerate,
+      InteractionType,
     ],
   }),
   CampaignModule,],

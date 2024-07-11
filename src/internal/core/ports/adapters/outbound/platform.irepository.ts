@@ -1,4 +1,4 @@
-import { Platform } from "../domain/platform/platform.model";
+import { Platform } from "../../../domain/models/platform.model";
 
 
 export interface IPlatformRepository{

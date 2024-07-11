@@ -1,5 +1,5 @@
 import { CampaignPlatform } from "./campaign.model";
-import { InteractionType } from "../../interaction_type/itype.model";
+import { InteractionType } from "./itype.model";
 
 export class Platform {
     constructor(name: string, tag: string, description?: string) {

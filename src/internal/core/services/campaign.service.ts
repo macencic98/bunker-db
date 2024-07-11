@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CampaignPlatformDto, CreateCampaignDto, UpdateCampaignDto } from '../domain/dto/campaign.dto';
-import { ICampaignPlatformRepository, ICampaignService } from "../ports/campaign.iservice";
+import { ICampaignService } from "../ports/campaign.iservice";
 import { ICampaignRepository } from "../ports/adapters/outbound/campaign.irepository";
 import { Campaign, CampaignInteractionConglomerate, CampaignPlatform } from "../domain/models/campaign.model";
 import { IPlatformRepository } from '../ports/adapters/outbound/platform.irepository';
@@ -8,6 +8,7 @@ import { IRepositoryTransactioner } from "../ports/transactioner.irepository";
 import { Platform } from "../domain/models/platform.model";
 import { InteractionType } from "../domain/models/itype.model";
 import { IInteractionTypeRepository } from "../ports/adapters/outbound/itype.irepository";
+import { ICampaignPlatformRepository } from "../ports/adapters/outbound/camppltfrm.irepository";
 
 @Injectable()
 export class CampaignService extends Error implements ICampaignService  {
@@ -29,31 +30,26 @@ export class CampaignService extends Error implements ICampaignService  {
 
     async create(dto: CreateCampaignDto): Promise<Campaign> {
         let newCampaign: Campaign = new Campaign(dto.totalBudget, dto.name, dto.startDate, dto.endDate)
-        let newCampaignPlatforms: CampaignPlatform[] = await this.setCampaignPlatforms(newCampaign, dto.platforms)
+
+        try{
+            let newCampaignPlatforms: CampaignPlatform[] = await this.setCampaignPlatforms(newCampaign, dto.platforms)
         if(!this.isCampaignBudgetValid(newCampaign.totalBudget, this.calculateCurrentBudget(newCampaignPlatforms))){
             throw new Error("")
         }
 
-        await newCampaignPlatforms.forEach(async element => (
-            await this.setCampaignPlatformConglomerate(element)
-        ))
-
         await this.transactioner.do(async (manager) => {
             newCampaign = await this.campaignRepository.create(newCampaign)
-            await newCampaignPlatforms.forEach(async element => (
-                element.campaign.id = newCampaign.id
-            ))
-            
+            for(let i = 0; i < newCampaignPlatforms.length; i++){
+                await this.setCampaignPlatformConglomerate(newCampaignPlatforms[i])
+                newCampaignPlatforms[i].campaign.id = newCampaign.id
+                await this.campaignPlatformRepository.create(newCampaignPlatforms[i])
+            }
         })
 
-        try {
-            
-            return newCampaign
-        } catch (error) {
-            //
-        } 
+        return newCampaign
+        }catch(err){
 
-        return null
+        }
     }
 
     async delete(id: number): Promise<Campaign> {

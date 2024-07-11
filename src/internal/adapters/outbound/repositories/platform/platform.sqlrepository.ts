@@ -12,7 +12,8 @@ export class PlatformSQLRepository implements IPlatformRepository {
     @InjectRepository(Platform)
     private campaignRepository: Repository<Platform>,
   ) {}
-  findOneById(id: number): Promise<Platform> {
+
+  async findOneById(id: number): Promise<PlatformModel> {
     throw new Error('Method not implemented.');
   }
 }

@@ -1,4 +1,4 @@
-import { Unique, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Unique, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { InteractionType } from './itype.entity';
 import { Platform } from './platform.entity';
 
@@ -29,11 +29,11 @@ export class Campaign {
     @Column({name:"deleted_at"})
     deletedAt: Date
 
-    @ManyToOne(() => CampaignPlatform, (cmpPlatform) => cmpPlatform.campaign, {})
+    @OneToMany(() => CampaignPlatform, (cmpPlatform) => cmpPlatform.campaign, {})
     platforms: CampaignPlatform[]
 }
 
-@Unique('platform_campaign_constraint', ['platform, campaign']) 
+@Index("campaign_cmplatform_constraint", ["platform.id", "campaign.id"], { unique: true })
 @Entity()
 export class CampaignPlatform {
     @PrimaryGeneratedColumn()
@@ -51,7 +51,7 @@ export class CampaignPlatform {
     platformBudget: number;
 }
 
-@Unique('interactiont_campaignplt_constraint', ['interactionType, campaignPlatform']) 
+@Index("interactiont_campaignplt_constraint", ["interactionType.id", "campaignPlatform.id"], { unique: true })
 @Entity()
 export class CampaignInteractionConglomerate {
     @PrimaryGeneratedColumn()
