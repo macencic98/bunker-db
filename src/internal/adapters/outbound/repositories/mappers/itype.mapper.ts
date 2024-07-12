@@ -5,7 +5,10 @@ import { mapPlatformEntityToModel, mapPlatformModelToEntity } from './platform.m
 export function mapInteractionTypeEntityToModel(entity: InteractionTypeEntity): InteractionTypeModel {
     const model = new InteractionTypeModel(entity.name, entity.description);
     model.id = entity.id;
-    model.platform = mapPlatformEntityToModel(entity.platform);
+    if(model.platform != undefined){
+        model.platform = mapPlatformEntityToModel(entity.platform);
+    }
+    
     return model;
 }
 

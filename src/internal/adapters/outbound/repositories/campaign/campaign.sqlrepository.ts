@@ -36,10 +36,10 @@ export class CampaignSQLRepository implements ICampaignRepository {
   async findAll(): Promise<Campaign[]> {
     try {
       let cmp: CampaignEntity[] = await this.campaignRepository.find()
-      let array: Campaign[] = new Campaign[cmp.length]
-      cmp.forEach(element => {
-        array.push(mapCampaignEntityToModel(element))
-      })
+      let array: Campaign[] = new Array(cmp.length);
+      for(let i = 0; i < cmp.length; i++){
+        array[i] = mapCampaignEntityToModel(cmp[i])
+      }
 
       return array
     } catch(error) {

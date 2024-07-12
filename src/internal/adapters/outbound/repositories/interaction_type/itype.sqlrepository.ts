@@ -11,7 +11,7 @@ import { mapInteractionTypeEntityToModel, mapInteractionTypeModelToEntity } from
 @Injectable()
 export class InteractionTypeSQLRepository implements IInteractionTypeRepository {
   constructor(
-    @InjectRepository(Campaign)
+    @InjectRepository(InteractionTypeEntity)
     private iTypeRepository: Repository<InteractionTypeEntity>,
   ) {}
 
@@ -27,11 +27,10 @@ export class InteractionTypeSQLRepository implements IInteractionTypeRepository 
 
     async findByPlatform(id: number): Promise<InteractionType[]> {
         let interactionTypes: InteractionTypeEntity[] = await this.iTypeRepository.findBy({platform: {id: id}})
-        let interactionModels: InteractionType[] = new InteractionType[interactionTypes.length];
-
-        interactionTypes.forEach((element) => {
-            interactionModels.push(mapInteractionTypeEntityToModel(element))
-        })
+        let interactionModels: InteractionType[] = new Array(interactionTypes.length);
+        for(let idx = 0; idx < interactionTypes.length; idx++){
+            interactionModels[idx] = mapInteractionTypeEntityToModel(interactionTypes[idx])
+        }
         
         return interactionModels
     }

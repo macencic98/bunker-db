@@ -33,8 +33,9 @@ export class Campaign {
     platforms: CampaignPlatform[]
 }
 
-@Index("campaign_cmplatform_constraint", ["platform.id", "campaign.id"], { unique: true })
+
 @Entity()
+@Index("campaign_cmplatform_constraint", ["platform.id", "campaign.id"], { unique: true })
 export class CampaignPlatform {
     @PrimaryGeneratedColumn()
     id: number;
@@ -51,8 +52,8 @@ export class CampaignPlatform {
     platformBudget: number;
 }
 
-@Index("interactiont_campaignplt_constraint", ["interactionType.id", "campaignPlatform.id"], { unique: true })
 @Entity()
+@Index("interactiont_campaignplt_constraint", ["interactionType.id", "campaignPlatform.id"], { unique: true })
 export class CampaignInteractionConglomerate {
     @PrimaryGeneratedColumn()
     id: number;

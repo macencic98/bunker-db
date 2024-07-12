@@ -7,7 +7,7 @@ export const connectionSource = new DataSource({
   username: 'root',
   password: 'root',
   database: 'campaigns',
-  entities: ['src/**/**.entity{.ts,.js}'],
+  entities: [ '../bunker-marketing-app/entities/*.entity.{js,ts}'],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,
 });

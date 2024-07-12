@@ -1,13 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsPositive, IsNumber} from 'class-validator';
+import { PlatformDTOResponse } from './campaignpl.dto';
+import { IsOptional, IsPositive, IsNumber, IsNotEmpty } from '@nestjs/class-validator';
 
 
 export class CampaignPlatformDto {
   @ApiProperty()
   @IsPositive()
   @IsNumber()
+  @IsNotEmpty()
   readonly id: number;
   @ApiProperty()
+  @IsPositive()
+  @IsNotEmpty()
+  @IsNumber()
   readonly platformBudget: number;
 }
 
@@ -17,42 +22,61 @@ export class CreateCampaignDto {
     default: 1,
   })
   @ApiProperty()
-  readonly name: string;
+  @IsNotEmpty()
+  name: string;
   @ApiProperty()
   @IsPositive()
-  readonly totalBudget: number;
+  @IsNotEmpty()
+  totalBudget: number;
   @ApiProperty()
-  readonly endDate: Date;
+  @IsNotEmpty()
+  startDate: Date;
+  @IsOptional()
   @ApiProperty()
-  readonly startDate: Date;
+  endDate: Date;
+  @IsNotEmpty()
   @ApiProperty({ type: [CampaignPlatformDto] })
-  readonly platforms: CampaignPlatformDto[]
+  platforms: CampaignPlatformDto[]
 }
 
-
-export class CreateCampaignResponse {
+export class CampaignResponse {
   @ApiProperty({
     minimum: 1,
     default: 1,
   })
   @ApiProperty()
-  readonly name: string;
+  name: string;
   @ApiProperty()
-  readonly totalBudget: number;
+  totalBudget: number;
   @ApiProperty()
-  readonly endDate: Date;
+  endDate: Date;
   @ApiProperty()
-  readonly startDate: Date;
+  startDate: Date;
   @ApiProperty()
-  readonly createdAt: Date;
+  createdAt: Date;
   @ApiProperty()
-  readonly updatedAt: Date;
-  @ApiProperty()
-  readonly deletedAt: Date;
+  updatedAt: Date;
   @ApiProperty({ type: [CampaignPlatformDto] })
-  readonly platforms: CampaignPlatformDto[]
+  platforms: PlatformDTOResponse[]
+}
+
+export class CreateCampaignResponse extends CampaignResponse{
+  
 }
 
 export class UpdateCampaignDto{
-
+  id: number
+  @ApiProperty({
+    minimum: 1,
+    default: 1,
+  })
+  @ApiProperty()
+  @IsOptional()
+  name: string;
+  @ApiProperty()
+  @IsOptional()
+  startDate: Date;
+  @IsOptional()
+  @ApiProperty()
+  endDate: Date;
 }

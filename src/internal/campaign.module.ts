@@ -10,7 +10,7 @@ import { CampaignService } from './core/services/campaign.service';
 import { CampaignSQLRepository } from './adapters/outbound/repositories/campaign/campaign.sqlrepository';
 import { Campaign, CampaignInteractionConglomerate, CampaignPlatform } from './core/domain/entities/campaign.entity';
 import { IRepositoryTransactioner } from './core/ports/transactioner.irepository';
-import { Transactioner } from './adapters/outbound/repositories/campaign.transactioner';
+import { TypeormTransactioner } from './adapters/outbound/repositories/campaign.transactioner';
 import { IInteractionTypeRepository } from './core/ports/adapters/outbound/itype.irepository';
 import { InteractionTypeSQLRepository } from './adapters/outbound/repositories/interaction_type/itype.sqlrepository';
 import { CampaignPlatformSQLRepository } from './adapters/outbound/repositories/campaign/cmppltfrm.sqlrepository';
@@ -43,7 +43,7 @@ import { InteractionType } from './core/domain/entities/itype.entity';
   },
   {
     provide: IRepositoryTransactioner,
-    useClass: Transactioner,
+    useClass: TypeormTransactioner,
   }],
 })
 export class CampaignModule {}
