@@ -1,4 +1,4 @@
-import { Unique, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { Unique, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, Index, DeleteDateColumn } from 'typeorm';
 import { InteractionType } from './itype.entity';
 import { Platform } from './platform.entity';
 
@@ -26,7 +26,8 @@ export class Campaign {
     @Column({name:"updated_at"})
     updatedAt: Date
 
-    @Column({name:"deleted_at"})
+    @Column({ type: 'timestamp', nullable: true, name:"deleted_at" })
+    @DeleteDateColumn()
     deletedAt: Date
 
     @OneToMany(() => CampaignPlatform, (cmpPlatform) => cmpPlatform.campaign, {})
