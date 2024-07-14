@@ -91,16 +91,23 @@ export class CampaignSQLRepository implements ICampaignRepository {
     }
   }
 
-  async update(campaign: Campaign): Promise<Campaign> {
+  async update(campaign: Partial<Campaign>): Promise<Partial<Campaign>> {
     try {
-      return await this.campaignRepository.save(campaign);
+      let result = await this.campaignRepository.update({
+        id: campaign.id
+      }, campaign);
+      
+      if(result.affected == 0){
+        return null
+      }
+      
+      return campaign
     } catch (error) {
       Logger.log(error.message, "error")
       if(error instanceof MappingException){
         throw error
       }
       throw new RepositoryException("there has been an error updating the campaign")
-      //
     }
   }
 

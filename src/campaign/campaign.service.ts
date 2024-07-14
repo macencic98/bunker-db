@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { CreateCampaignDto, UpdateCampaignDto } from './campaign.dto';
 import { ICampaignService } from "./campaign.iservice";
 import { ICampaignRepository } from "./campaign.irepository";
@@ -63,13 +63,20 @@ export class CampaignService extends Error implements ICampaignService {
         }
     }
 
-    async delete(id: number): Promise<Campaign> {
+    async delete(id: number): Promise<Partial<Campaign>> {
         try {
-            let camp = await this.campaignRepository.findOneById(id);
-            camp.updatedAt = new Date();
-            return await this.campaignRepository.update(camp);
+            let campaignToDelete: Partial<Campaign> = {
+                id: id, 
+                deletedAt: new Date(),
+            }
+
+            campaignToDelete = await this.campaignRepository.update(campaignToDelete);
+            if(campaignToDelete == null){
+                throw new NotFoundException("the campaign has not been found")
+            }
+
+            return campaignToDelete
         } catch (error) {
-            console.error("An error occurred:", error.message);
             throw error
         }
     }
@@ -83,17 +90,32 @@ export class CampaignService extends Error implements ICampaignService {
         }
     }
 
-    async update(campaign: UpdateCampaignDto): Promise<Campaign> {
-        let campaignToBeUpdated: Campaign = new Campaign()
-        campaignToBeUpdated.name = campaign.name
-        campaignToBeUpdated.startDate = campaign.startDate
-        campaignToBeUpdated.endDate = campaign.endDate
+    async update(campaign: UpdateCampaignDto): Promise<Partial<Campaign>> {
+        let campaignToBeUpdated: Partial<Campaign> = {
+            id: campaign.id
+        }
+
+        if(campaign.name != null){
+            campaignToBeUpdated["name"] = campaign.name
+        }
+        
+        if(campaign.startDate != null){
+            campaignToBeUpdated["startDate"] = campaign.startDate
+        }
+
+        if(campaign.endDate != null){
+            campaignToBeUpdated["endDate"] = campaign.endDate
+        }
 
         try {
-            return await this.campaignRepository.update(campaignToBeUpdated);
+            campaignToBeUpdated = await this.campaignRepository.update(campaignToBeUpdated);
+            if(campaignToBeUpdated == null){
+                throw new NotFoundException("the campaign has not been found")
+            }
+            return campaignToBeUpdated
         } catch (error) {
             Logger.log(error)
-            throw new Error("there has been an error updating the Campaign")
+            throw new Error(error.message)
         }
     }
 

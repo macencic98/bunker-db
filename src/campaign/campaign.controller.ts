@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Inject,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
@@ -163,6 +164,9 @@ export class CampaignController {
       return new BaseResponse(HttpStatus.NO_CONTENT, "success", null)
     }
     catch (error) {
+      if(error instanceof NotFoundException){
+        throw new BaseExceptionResponse(HttpStatus.NOT_FOUND, error.message)
+      }
       throw new BaseExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, error.message)
     }
   }
@@ -189,8 +193,11 @@ export class CampaignController {
   async update(@Param('id') id: number, @Body() updateCampaignDto: UpdateCampaignDto) {
     try {
       updateCampaignDto.id = id
-      return new BaseResponse(HttpStatus.OK, "success", { "campaign": Mapper.toupdateCampaignResponse(await this.campService.update(updateCampaignDto)) })
+      return new BaseResponse(HttpStatus.OK, "success", null)
     } catch (error) {
+      if(error instanceof NotFoundException){
+        throw new BaseExceptionResponse(HttpStatus.NOT_FOUND, error.message)
+      }
       throw new BaseExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, error.message)
     }
 
