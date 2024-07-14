@@ -19,10 +19,21 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_DATABASE: marketing
+      MYSQL_DATABASE: campaigns
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - '3307:3306'
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    environment:
+      - DYNAMO_HEAP_SIZE=2048m
+    ports:
+      - "8000:8000"
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb"]
 volumes:
   ignore:

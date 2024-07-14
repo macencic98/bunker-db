@@ -1,13 +1,13 @@
 import { DataSource } from 'typeorm';
 
-export const connectionSource = new DataSource({
+export var connectionSource = new DataSource({
   type: 'mysql',
-  host: 'localhost',
+  host: 'mysql',
   port: 3306,
   username: 'root',
   password: 'root',
   database: 'campaigns',
-  entities: [ '../bunker-marketing-app/entities/*.entity.{js,ts}'],
-  migrations: ['src/migrations/*.ts'],
+  entities: ['src/**/**.entity{.ts,.js}'],
+  migrations: ['./dist/src/db/migrations/*.js'],
   synchronize: false,
 });

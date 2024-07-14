@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Campaign, CampaignInteractionConglomerate, CampaignPlatform } from './internal/core/domain/entities/campaign.entity';
-import { CampaignModule } from './internal/campaign.module';
-import { Platform } from './internal/core/domain/entities/platform.entity';
-import { InteractionType } from './internal/core/domain/entities/itype.entity';
+import { InteractionModule } from './interaction/interaction.module';
+import { CampaignModule } from './campaign/campaign.module';
+import { MessageDispatcherModule } from './message-dispatcher/msgdisp.module';
+import { TransactionerModule } from './transactioner/transactioner.module';
+
 
 @Module({
   imports: [ ConfigModule.forRoot({
@@ -18,17 +19,9 @@ import { InteractionType } from './internal/core/domain/entities/itype.entity';
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    autoLoadEntities: true,
     synchronize: false,
-    
-    entities: [
-      Campaign,
-      Platform,
-      CampaignPlatform,
-      CampaignInteractionConglomerate,
-      InteractionType,
-    ],
+    autoLoadEntities: true,
   }),
-  CampaignModule,],
+  TransactionerModule, CampaignModule, InteractionModule, MessageDispatcherModule],
 })
 export class AppModule {}

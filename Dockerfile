@@ -8,7 +8,8 @@ COPY tsconfig.json ./
 COPY src ./src
 COPY .env.local ./
 COPY ormconfig.ts ./
-
+COPY ./init.sql /docker-entrypoint-initdb.d/
 EXPOSE 3000
 
-CMD ["npm", "run", "start:local"]
+CMD ["npm", "run", "migrate:up"]
+CMD ["npm", "run", "start:local-docker"]
