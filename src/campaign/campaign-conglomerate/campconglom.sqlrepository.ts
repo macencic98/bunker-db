@@ -20,6 +20,7 @@ export class CampaignConglomerateSQLRepository implements ICampaignConglomerateR
             let entity: CampaignInteractionConglomerateEntity = mapCampaignIntModelToEntity(cmpIntCongl)
             let rs = await this.cmpConglRepo.insert(entity)
             cmpIntCongl.id = rs.identifiers[0].id
+            return cmpIntCongl
         }catch(error){
             Logger.log(error.message + error.stack, 'error')
             if(error instanceof MappingException){
@@ -28,8 +29,6 @@ export class CampaignConglomerateSQLRepository implements ICampaignConglomerateR
             
             throw new RepositoryException("there has been an error storing the interactions")
         }
-        
-        return
     }
 
     async incrementQuantity(cmpIntCongl: CampaignInteractionConglomerate): Promise<CampaignInteractionConglomerate> {

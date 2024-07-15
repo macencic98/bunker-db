@@ -8,12 +8,14 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiExtraModels,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiTags,
   getSchemaPath,
@@ -140,20 +142,7 @@ export class CampaignController {
   }
 
   @ApiExtraModels(BaseResponse, CampaignResponse)
-  @ApiOkResponse({
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(BaseResponse) },
-        {
-          properties: {
-            content: {
-              type: 'array',
-              items: { $ref: getSchemaPath(CampaignResponse) },
-            },
-          },
-        },
-      ],
-    },
+  @ApiNoContentResponse({
     description: 'Campaigns',
   })
   @ApiTags(ApiTagsEnum.CAMPAIGNS)
@@ -189,10 +178,11 @@ export class CampaignController {
     description: 'Campaigns',
   })
   @ApiTags(ApiTagsEnum.CAMPAIGNS)
-  @Delete(':id')
+  @Put(':id')
   async update(@Param('id') id: number, @Body() updateCampaignDto: UpdateCampaignDto) {
     try {
       updateCampaignDto.id = id
+      await this.campService.update(updateCampaignDto)
       return new BaseResponse(HttpStatus.OK, "success", null)
     } catch (error) {
       if(error instanceof NotFoundException){

@@ -9,7 +9,8 @@ COPY src ./src
 COPY .env.local ./
 COPY ormconfig.ts ./
 COPY ./init.sql /docker-entrypoint-initdb.d/
+COPY ./dynamotablecreation.js /docker-entrypoint-initdb.d/
+COPY ./rabbitmqdefinitions.json /etc/rabbitmq/definitions.json
 EXPOSE 3000
 
-CMD ["npm", "run", "migrate:up"]
 CMD ["npm", "run", "start:local-docker"]

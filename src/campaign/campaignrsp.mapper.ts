@@ -39,7 +39,7 @@ export class Mapper {
         return null
       }
 
-      let platforms: PlatformDTOResponse[] = new Array(campaign.campaignPlatforms.length)
+      let platforms: PlatformDTOResponse[]
       let resp: CampaignResponse = new CampaignResponse()
       resp.name = campaign.name
       resp.totalBudget = campaign.totalBudget
@@ -50,6 +50,7 @@ export class Mapper {
       
 
       if (campaign.campaignPlatforms != null) {
+        platforms = new Array(campaign.campaignPlatforms.length)
         for(let i = 0; i < campaign.campaignPlatforms.length; i++){
           platforms[i] = Mapper.toPlatformDTOResponse(campaign.campaignPlatforms[i])
         }

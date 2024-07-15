@@ -24,11 +24,9 @@ export class CreateInteractionDTO {
     @IsNotEmpty()
     readonly interactionTypeTag: string;
     @ApiProperty()
-    @IsDate()
     @IsNotEmpty()
     readonly date: Date;
     @ApiProperty()
-    @IsString()
     @IsNotEmpty()
     readonly userData: UserDataDTO;
 }

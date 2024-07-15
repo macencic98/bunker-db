@@ -54,6 +54,7 @@ export class CampaignService extends Error implements ICampaignService {
            // });
 
             Logger.log(12)
+            newCampaign.campaignPlatforms = newCampaignPlatforms
             return newCampaign
         } catch (err) {
             Logger.log(err.stack)

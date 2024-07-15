@@ -1,5 +1,17 @@
 version: '3'
 services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: campaigns
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '3307:3306'
+
   nestjs:
     build:
       context: .
@@ -15,18 +27,6 @@ services:
       - ./:/usr/local/apps/myapp
       - /usr/local/apps/myapp/node_modules
 
-  mysql:
-    image: mysql:latest
-    restart: always
-    environment:
-      MYSQL_DATABASE: campaigns
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - '3307:3306'
-
   dynamodb:
     image: amazon/dynamodb-local
     container_name: dynamodb-local
@@ -35,5 +35,18 @@ services:
     ports:
       - "8000:8000"
     command: ["-jar", "DynamoDBLocal.jar", "-sharedDb"]
-volumes:
-  ignore:
+    volumes:
+      - ./dynamotablecreation.js:/docker-entrypoint-initdb.d/dynamotablecreation.js
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: my_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_VHOST: my_vhost
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmqdefinitions.json:/etc/rabbitmq/definitions.json

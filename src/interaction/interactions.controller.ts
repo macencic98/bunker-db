@@ -1,15 +1,16 @@
-import { Body, Controller, HttpStatus, Inject, Post } from "@nestjs/common"
+import { Body, Controller, HttpStatus, Inject, Logger, Post } from "@nestjs/common"
 import { ApiBody, ApiCreatedResponse, ApiExtraModels, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger"
 import { ApiTagsEnum } from "../enums/apitags.enum"
 import { CreateInteractionDTO } from "../interaction/interaction.dto"
 import { IInteractionService } from "../interaction/interactions.iservice"
-import { InvalidBudgetError } from "../exceptions/errors.model"
 import BaseResponse from "../utils/api/httpresponses/baseresp.model"
 import BaseExceptionResponse from "../utils/api/httpresponses/basexcep.model"
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('interactions')
 export class InteractionsController {
-    constructor(@Inject(IInteractionService) private readonly intService: IInteractionService) { }
+    constructor(@Inject(IInteractionService) private readonly intService: IInteractionService,
+    ) { }
     @ApiExtraModels(BaseResponse)
     @ApiCreatedResponse({
         schema: {
@@ -19,13 +20,9 @@ export class InteractionsController {
         },
         description: 'Campaigns',
     })
-    @ApiUnauthorizedResponse({
-        type: BaseExceptionResponse,
-        description: 'Unauthorized',
-    })
-    @ApiTags(ApiTagsEnum.CAMPAIGNS)
+    @ApiTags(ApiTagsEnum.INTERACTIONS)
     @ApiBody({ type: CreateInteractionDTO })
-    @Post('/interactions')
+    @Post()
     async saveInteraction(@Body() createInteraction: CreateInteractionDTO) {
         try {
             await this.intService.create(createInteraction)
@@ -34,4 +31,11 @@ export class InteractionsController {
             throw new BaseExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, error.message)
         }
     }
+
+    @MessagePattern({ cmd: 'event' })
+    async handleMessage(@Payload() message: any) {
+        Logger.log("event listened to: " + JSON.stringify(message) )
+        await this.intService.handleInteractionEvent(message)
+    }
 }
+

@@ -3,9 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { InteractionModule } from './interaction/interaction.module';
 import { CampaignModule } from './campaign/campaign.module';
-import { MessageDispatcherModule } from './message-dispatcher/msgdisp.module';
 import { TransactionerModule } from './transactioner/transactioner.module';
-
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [ ConfigModule.forRoot({
@@ -22,6 +21,6 @@ import { TransactionerModule } from './transactioner/transactioner.module';
     synchronize: false,
     autoLoadEntities: true,
   }),
-  TransactionerModule, CampaignModule, InteractionModule, MessageDispatcherModule],
+  TransactionerModule, CampaignModule, InteractionModule, ClientsModule],
 })
 export class AppModule {}

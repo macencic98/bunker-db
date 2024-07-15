@@ -1,6 +1,5 @@
-
-import { IndexType, Schema } from 'dynamoose/dist/Schema';
-const dynamoose = require('dynamoose'); 
+import * as dynamoose from 'dynamoose';
+import { IndexType } from 'dynamoose/dist/Schema';
 
 const interactionSchema = new dynamoose.Schema({
   campaign_tag: {
@@ -24,7 +23,7 @@ const interactionSchema = new dynamoose.Schema({
     },
   },
   user_info: {
-    type: Object,
+    type: String,
     required: true,
   },
 });
