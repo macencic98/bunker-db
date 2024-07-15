@@ -39,8 +39,8 @@ export class InteractionService extends Error implements IInteractionService {
             campaignConglomerate.campaignPlatform = new CampaignPlatform(0)
             campaignConglomerate.campaignPlatform.campaign = interaction.campaign
 
-            //await this.conglomerateRepo.incrementQuantity(campaignConglomerate)
-            await this.intMessService.sendEvent(new MsgProdDTO<Interaction>(interaction))
+            await this.conglomerateRepo.incrementQuantity(campaignConglomerate)
+            //await this.intMessService.sendEvent(new MsgProdDTO<Interaction>(interaction))
             return interaction;
         } catch (error) {
             throw error
