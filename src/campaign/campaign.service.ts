@@ -40,20 +40,16 @@ export class CampaignService extends Error implements ICampaignService {
             }
 
            // await this.transactioner.do(async (manager) => {
-                Logger.log(5)
+                
                 newCampaign.id = (await this.campaignRepository.create(newCampaign)).id
                 //manager.save(newCampaign)
-                Logger.log(6)
                 for (let i = 0; i < newCampaignPlatforms.length; i++) {
                     newCampaignPlatforms[i].campaign = newCampaign
                     newCampaignPlatforms[i] = await this.campaignPlatformService.create(newCampaignPlatforms[i])        
-                    Logger.log(9)
                 }
 
-                Logger.log(11)
            // });
 
-            Logger.log(12)
             newCampaign.campaignPlatforms = newCampaignPlatforms
             return newCampaign
         } catch (err) {

@@ -7,7 +7,6 @@ import { RepositoryException } from "src/exceptions/errors.model";
 export class InteractionDynamoRepository implements IInteractionRepository {
     async create(interaction: Interaction): Promise<Interaction> {
         try {
-            Logger.log("aca")
             let interactionEntity = new InteractionEntity({
                 campaign_tag: interaction.campaign.tag,
                 id: interaction.id,
