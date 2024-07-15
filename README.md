@@ -51,3 +51,6 @@ de interacciones, aumentar el presupuesto, bajarlo, aumentar el presupuesto en u
 ## Arquitectura del proyecto a nivel repositorio
 Trabajar con NestJS supuso un desafío a nivel modular. Se trató de implementar algo similar a una arquitectura hexagonal en donde dejamos los puntos de entrada
 y salida de la aplicación ajenos a la lógica de procesamiento e interfaseados en todo momento para poder reemplazarlos según el caso. 
+
+La implementación de los Listeners de eventos deberían ser genéricas según el servicio que se esté utilizando y contar con
+lógica propia para procesar ese mensaje.
